@@ -35,7 +35,6 @@ if __name__=="__main__":
 	print 'Cycle end date is ' + str(enddate)
 
 	#--------- Handle cycle income --------
-	
 	incomefile = "F:\\Files For\\Hai Yen Nguyen\\IIROC reporting\\Download\\Income" + enddate.strftime('%m%d%Y') +".txt"
 	print incomefile
 	#---- read file to df --------
@@ -57,8 +56,44 @@ if __name__=="__main__":
 	else:
 		print 'The cycle income file you need is not saved yet, please save the file first'
 
-
+	dfhead = pd.read_excel("F:\\Files For\\Hai Yen Nguyen\\IIROC reporting\\Reference\\Header.xlsx") #get cycle income column header
+	columns = dfhead['Header'].tolist()
+	dfincome.columns = columns
+	print dfincome.head()
 		
+	#--------- Handle RO advance --------	
+	advancefile = "F:\\Files For\\Hai Yen Nguyen\\IIROC reporting\\Download\\Advance " + enddate.strftime('%m%d%Y') +".csv"
+	print advancefile
+	#---- read file to df --------
+	if os.path.isfile(advancefile):
+		rowno = 0
+		with open(advancefile) as f:
+				for line in f: 
+					rowno = rowno + 1
+					if re.match(enddate.strftime('%Y%m%d'), line.lstrip(' ')):
+						dataline = re.match(enddate.strftime('%Y%m%d'), line.lstrip(' ')).group()
+						print dataline
+						print 'data starts at row ' + str(rowno)
+						break
+						
+		dfincome = pd.read_csv(incomefile, sep='|', engine='python', header=None, skiprows=rowno-2, skipfooter=1)			
+		dfincome.dropna(axis=1, how='all', inplace=True)
+		print dfincome.head()
+		print dfincome.shape
+	else:
+		print 'The cycle income file you need is not saved yet, please save the file first'
+
+	#--------- Handle Garnishee -------------
+	garnisheefile = "F:\\Files For\\Hai Yen Nguyen\\IIROC reporting\\Download\\Advance " + enddate.strftime('%m%d%Y') + ".csv"
+	print garnisheefile
+	if os.path.isfile(garnisheefile):
+		rowno = 0
+		with open(garnisheefile) as f:
+			for line in f:
+				rowno = rowno + 1
+				if re.match(enddate.strftime('%'))
+	
+	
 	#--------- db connection ----------------
 	odbc_conn_str = "DSN=DSDPRD;DBQ=DSDPRD;UID=wwang;PWD=west33" #connect to DSDB using your usr and pssd
 	conn = pyodbc.connect(odbc_conn_str) #open co
