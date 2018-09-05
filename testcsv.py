@@ -66,3 +66,10 @@ if __name__=="__main__":
 			dfsumgarnishee = dfgarnishee.groupby(["Cslt No."])["Total Amount"].sum().round(2)
 	else:
 		print("It seems the file you need is not saved yet, please save the file first.")
+
+	#--------- Handle RO advance -------------
+	netpayfile = "C:\\pycode\\IIROCIncome\\NetPay " + enddate.strftime("%m%d%Y") + ".csv"
+
+	if os.path.isfile(netpayfile):
+		total = float(0)
+		
