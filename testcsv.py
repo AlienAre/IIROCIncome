@@ -43,7 +43,7 @@ if __name__=="__main__":
 
 	#--------- Handle Garnishee -------------
 	garnisheefile = "C:\\pycode\\IIROCIncome\\Garnishee " + enddate.strftime("%m%d%Y") + ".csv"
-	print(garnisheefile)
+	#print(garnisheefile)
 
 	if os.path.isfile(garnisheefile):
 		total = float(0)
@@ -65,7 +65,7 @@ if __name__=="__main__":
 		#make sure total of all data rows matches the total amount "Report Totals" from file
 		if total != dfgarnishee["Total Amount"].sum().round(2):
 			print(total, " <> ", dfgarnishee["Total Amount"].sum().round(2))
-			print("please check your file")
+			print("please check your file", garnisheefile)
 			sys.exit()
 		else:
 			print(total, " = ", dfgarnishee["Total Amount"].sum().round(2))
@@ -73,7 +73,7 @@ if __name__=="__main__":
 	else:
 		print("It seems the file you need is not saved yet, please save the file first.")
 
-	#--------- Handle RO advance -------------
+	#--------- Handle Net Pay -------------
 	netpayfile = "C:\\pycode\\IIROCIncome\\NetPay " + enddate.strftime("%m%d%Y") + ".csv"
 
 	if os.path.isfile(netpayfile):
@@ -92,3 +92,18 @@ if __name__=="__main__":
 		dfnetpay[["Cslt No.","CACT"]].astype("int64")
 		dfnetpay["Total Amount"] = dfnetpay["Total Amount"].apply(ig.str2float)
 		dfnetpay["Cycle End Date"] = dfnetpay["Cycle End Date"].astype("datetime64")
+		
+		#make sure total of all data rows matches the total amount "Report Totals" from file
+		if total != dfnetpay["Total Amount"].sum().round(2):
+			print(total, " <> ", dfnetpay["Total Amount"].sum().round(2))
+			print("Please check the file ", netpayfile)
+			sys.exit()
+		else:
+			print(total, " = ", dfnetpay["Total Amount"].sum().round(2))
+			dfsumnetpay = dfnetpay.groupby(["Cslt No."])["Total Amount"].sum().round(2)
+	else:
+		print("It seems the file you need is not saved yet, please save the file first.")
+			
+
+	
+	
